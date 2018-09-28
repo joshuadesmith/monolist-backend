@@ -78,3 +78,6 @@ src/spotify-config.js
 
 # pyenv
 .python-version
+
+# no idea lol
+__pycache__/
