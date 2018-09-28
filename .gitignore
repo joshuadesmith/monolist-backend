@@ -75,3 +75,6 @@ src/asw-amplify-config.js
 
 # Private config stuffs
 src/spotify-config.js
+
+# pyenv
+.python-version
