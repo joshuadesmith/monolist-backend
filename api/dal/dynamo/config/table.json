@@ -1,0 +1,27 @@
+{
+  "TableName": "monolist",
+  "KeySchema": [
+    {
+      "AttributeName": "NodeSource",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "NodeSink",
+      "KeyType": "RANGE"
+    }
+  ],
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "NodeSource",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "NodeSink",
+      "AttributeType": "S"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 5
+  }
+}
