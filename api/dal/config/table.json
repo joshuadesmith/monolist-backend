@@ -2,21 +2,21 @@
   "TableName": "monolist",
   "KeySchema": [
     {
-      "AttributeName": "NodeSource",
+      "AttributeName": "node_source",
       "KeyType": "HASH"
     },
     {
-      "AttributeName": "NodeSink",
+      "AttributeName": "node_sink",
       "KeyType": "RANGE"
     }
   ],
   "AttributeDefinitions": [
     {
-      "AttributeName": "NodeSource",
+      "AttributeName": "node_source",
       "AttributeType": "S"
     },
     {
-      "AttributeName": "NodeSink",
+      "AttributeName": "node_sink",
       "AttributeType": "S"
     }
   ],
