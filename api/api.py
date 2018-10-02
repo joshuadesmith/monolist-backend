@@ -1,12 +1,13 @@
 from api.dal.monolist_dynamo_access import MonoListDynamoAccess
-from api.dal.util import NodeIDGenerator
+from api.dal.util import NodeIDGenerator, convert_dict_for_dynamo
 
 db_access = MonoListDynamoAccess()
 
 
 # API methods to be called by Graphene Queries/Mutations
 def get_user(email: str) -> dict:
-    user_id = NodeIDGenerator.get_user_node_id(email)
+    user_id = {"S": NodeIDGenerator.get_user_node_id(email)}
+    print(user_id)
 
     try:
         user_dict = db_access.get_item(user_id, user_id)
@@ -23,18 +24,13 @@ def put_user(user_dict: dict) -> dict:
     attr_dict['node_source'] = user_id
     attr_dict['node_sink'] = user_id
 
-    try:
-        resp = db_access.put_item(attr_dict)
-        return resp
-    except RuntimeError as e:
-        return {}
+    resp = db_access.put_item(convert_dict_for_dynamo(attr_dict))
+    return resp
 
 
 def update_user(email: str, updated_attr: dict) -> dict:
-    user_id = NodeIDGenerator.get_user_node_id(email)
+    user_id = {"S": NodeIDGenerator.get_user_node_id(email)}
+    attrs = convert_dict_for_dynamo(updated_attr)
 
-    try:
-        resp = db_access.update_item(user_id, user_id, updated_attr)
-        return resp
-    except RuntimeError as e:
-        return {}
+    resp = db_access.update_item(user_id, user_id, attrs)
+    return resp

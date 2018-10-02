@@ -1,5 +1,5 @@
 {
-  "TableName": "monolist",
+  "TableName": "monolist-local",
   "KeySchema": [
     {
       "AttributeName": "node_source",

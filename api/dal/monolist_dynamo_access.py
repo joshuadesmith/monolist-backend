@@ -7,7 +7,7 @@ class MonoListDynamoAccess:
     def __init__(self):
         self.dynamo_client = boto3.client('dynamodb', endpoint_url=ENDPOINT_URL)
 
-    def get_item(self, node_source: str, node_sink: str):
+    def get_item(self, node_source: dict, node_sink: dict):
         response = self.dynamo_client.get_item(
             TableName=TABLE_NAME,
             Key={
@@ -23,17 +23,14 @@ class MonoListDynamoAccess:
 
     def put_item(self, item: dict):
         response = self.dynamo_client.put_item(
-            TABLE_NAME=TABLE_NAME,
+            TableName=TABLE_NAME,
             Item=item,
-            ReturnValues='UPDATED_NEW',
+            ReturnValues='ALL_OLD',
         )
 
-        if 'Attributes' in response:
-            return response['Attributes']
+        return response
 
-        raise RuntimeError("Error occurred while putting item in database")
-
-    def update_item(self, node_source: str, node_sink: str, attrs: dict):
+    def update_item(self, node_source: dict, node_sink: dict, attrs: dict):
         response = self.dynamo_client.update_item(
             TableName=TABLE_NAME,
             Key={
@@ -41,10 +38,7 @@ class MonoListDynamoAccess:
                 'node_sink': node_sink
             },
             AttributeUpdates=attrs,
-            ReturnValues='UPDATED_NEW'
+            ReturnValues='ALL_OLD'
         )
 
-        if 'Attributes' in response:
-            return response['Attributes']
-
-        raise RuntimeError("Error occurred while updating item in database")
+        return response
