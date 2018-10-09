@@ -24,15 +24,31 @@ class CreateUser(graphene.Mutation):
     new_user = graphene.Field(UserObject)
 
     def mutate(self, info, **kwargs):
-        print(kwargs)
         user_dict = {
             'email': kwargs.get('email')
         }
         resp = api.put_user(user_dict)
-        return CreateUser(success=True, new_user=UserObject(email=kwargs.get('email')))
+        return CreateUser(success=True, new_user=UserObject(email=resp['email']))
 
 
-class Query(graphene.ObjectType):
+class UpdateUser(graphene.Mutation):
+    class Arguments:
+        email = graphene.String(required=True)
+        spotify_auth_code = graphene.String(required=False)
+
+    success = graphene.Boolean()
+    updated_user = graphene.Field(UserObject)
+
+    def mutate(self, info, **kwargs):
+        user_dict = dict()
+        for key, val in kwargs.items():
+            user_dict[key] = val
+
+        resp = api.update_user(user_dict['email'], user_dict)
+        return CreateUser(success=True, updated_user=user_dict)
+
+
+class UserQuery(graphene.ObjectType):
     user_by_email = graphene.Field(UserObject, email=graphene.String())
 
     def resolve_user_by_email(self, info, **kwargs):
@@ -42,6 +58,7 @@ class Query(graphene.ObjectType):
 
 class Mutations(graphene.ObjectType):
     create_user = CreateUser.Field()
+    update_user = UpdateUser.Field()
 
 
-schema = graphene.Schema(query=Query, mutation=Mutations)
+schema = graphene.Schema(query=UserQuery, mutation=Mutations)
